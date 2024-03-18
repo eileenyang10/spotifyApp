@@ -9,6 +9,8 @@ import androidx.navigation.ui.NavigationUI;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -30,8 +32,6 @@ import com.example.spotifyapp.databinding.ActivityMainBinding;
 public class MainActivity extends AppCompatActivity {
 
     FirebaseAuth auth;
-    Button deleteAccountButton;
-    Button logoutAccountButton;
     TextView textView;
     FirebaseUser user;
     private ActivityMainBinding binding;
@@ -39,9 +39,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
         BottomNavigationView navView = findViewById(R.id.nav_view);
 
@@ -60,83 +60,16 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(binding.navView, navController);
 
         auth = FirebaseAuth.getInstance();
-        deleteAccountButton = findViewById(R.id.delete);
-        logoutAccountButton = findViewById(R.id.logout);
         textView = findViewById(R.id.user_details);
         user = auth.getCurrentUser();
 
         // Check if user returns null, meaning user is not logged in
-        if(user == null){
+        if (user == null) {
             Intent intent = new Intent(getApplicationContext(), Login.class);
             startActivity(intent);
             finish();
         } else {
             textView.setText(user.getEmail());
-        }
-
-        // Logout button function
-        logoutAccountButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FirebaseAuth.getInstance().signOut();
-                Intent intent = new Intent(getApplicationContext(), Login.class);
-                startActivity(intent);
-                finish();
-            }
-        });
-
-
-        // Delete account button function
-        deleteAccountButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Prompt the user to reauthenticate
-
-                // TODO: Make popup with textfield to save password for reauthentication
-
-                String password = "123456";
-
-                AuthCredential credential = EmailAuthProvider.getCredential(user.getEmail(), password);
-                user.reauthenticate(credential)
-                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if (task.isSuccessful()) {
-                                    // Reauthentication successful, now delete the account
-                                    user.delete()
-                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                @Override
-                                                public void onComplete(@NonNull Task<Void> task) {
-                                                    if (task.isSuccessful()) {
-                                                        // Account deleted successfully, proceed to logout
-                                                        FirebaseAuth.getInstance().signOut();
-                                                        // Redirect to login page
-                                                        Intent intent = new Intent(getApplicationContext(), Login.class);
-                                                        startActivity(intent);
-                                                        finish();
-                                                    } else {
-                                                        // Account deletion failed
-                                                        Toast.makeText(MainActivity.this, "Failed to delete account. Please try again.", Toast.LENGTH_SHORT).show();
-                                                    }
-                                                }
-                                            });
-                                } else {
-                                    // Reauthentication failed
-                                    Toast.makeText(MainActivity.this, "Reauthentication failed. Please try again.", Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        });
-            }
-        });
-    }
-
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();  // Handle the back button press
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
         }
     }
 
@@ -147,5 +80,68 @@ public class MainActivity extends AppCompatActivity {
         if (!navController.popBackStack()) {
             super.onBackPressed();
         }
+    }
+
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.account_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection.
+        if(item.getItemId() == R.id.logOutButton){
+            logOut();
+            return true;
+        } else if(item.getItemId() == R.id.deleteAccountButton) {
+            delete();
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
+
+    }
+
+    private void logOut(){
+        FirebaseAuth.getInstance().signOut();
+        Intent intent = new Intent(getApplicationContext(), Login.class);
+        startActivity(intent);
+        finish();
+    }
+
+    private void delete(){
+        String password = "123456";
+
+        AuthCredential credential = EmailAuthProvider.getCredential(user.getEmail(), password);
+        user.reauthenticate(credential)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            // Reauthentication successful, now delete the account
+                            user.delete()
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (task.isSuccessful()) {
+                                                // Account deleted successfully, proceed to logout
+                                                FirebaseAuth.getInstance().signOut();
+                                                // Redirect to login page
+                                                Intent intent = new Intent(getApplicationContext(), Login.class);
+                                                startActivity(intent);
+                                                finish();
+                                            } else {
+                                                // Account deletion failed
+                                                Toast.makeText(MainActivity.this, "Failed to delete account. Please try again.", Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+                                    });
+                        } else {
+                            // Reauthentication failed
+                            Toast.makeText(MainActivity.this, "Reauthentication failed. Please try again.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
     }
 }
