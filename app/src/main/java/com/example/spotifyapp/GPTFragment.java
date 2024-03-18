@@ -1,2 +1,6 @@
-package com.example.spotifyapp;public class GPTFragment {
+package com.example.spotifyapp;
+
+import androidx.fragment.app.Fragment;
+
+public class GPTFragment extends Fragment {
 }

@@ -1,6 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:app="http://schemas.android.com/apk/res-auto"
-             android:id="@+id/mobile_navigation">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_home">
+
+    <fragment
+        android:id="@+id/navigation_home"
+        android:name="com.example.spotifyapp.WrapperFragment"
+        android:label="Home"
+        tools:layout="@layout/home_fragment" >
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_games"
+        android:name="com.example.spotifyapp.GameFragment"
+        android:label="Games"
+        tools:layout="@layout/game_fragment" >
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_GPT"
+        android:name="com.example.spotifyapp.GPTFragment"
+        android:label="GPT"
+        tools:layout="@layout/gpt_fragment" >
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_profile"
+        android:name="com.example.spotifyapp.ProfileFragment"
+        android:label="Profile"
+        tools:layout="@layout/profile_fragment" >
+    </fragment>
 
 </navigation>

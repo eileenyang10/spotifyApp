@@ -2,9 +2,14 @@ package com.example.spotifyapp;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.AppBarConfiguration;
+import androidx.navigation.ui.NavigationUI;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -12,6 +17,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.Firebase;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -19,6 +25,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 
+import com.example.spotifyapp.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -27,11 +34,30 @@ public class MainActivity extends AppCompatActivity {
     Button logoutAccountButton;
     TextView textView;
     FirebaseUser user;
+    private ActivityMainBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+
+        BottomNavigationView navView = findViewById(R.id.nav_view);
+
+        // Passing each menu ID as a set of Ids because each
+        // menu should be considered as top-level destinations.
+        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
+                R.id.navigation_home, R.id.navigation_games, R.id.navigation_GPT, R.id.navigation_profile)
+                .build();
+
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
+
+        // Setup action bar with NavController
+        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+
+        // Setup bottom navigation with NavController
+        NavigationUI.setupWithNavController(binding.navView, navController);
 
         auth = FirebaseAuth.getInstance();
         deleteAccountButton = findViewById(R.id.delete);
@@ -102,5 +128,24 @@ public class MainActivity extends AppCompatActivity {
                         });
             }
         });
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();  // Handle the back button press
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    // Override onBackPressed to handle fragment navigation
+    @Override
+    public void onBackPressed() {
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
+        if (!navController.popBackStack()) {
+            super.onBackPressed();
+        }
     }
 }
