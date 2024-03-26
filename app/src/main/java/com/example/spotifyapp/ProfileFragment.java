@@ -1,7 +1,10 @@
 package com.example.spotifyapp;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -95,37 +98,64 @@ public class ProfileFragment extends Fragment {
     }
 
     private void delete() {
-        String password = "123456";
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        builder.setTitle("Reauthenticate");
+        builder.setMessage("Please enter your password to proceed:");
 
-        AuthCredential credential = EmailAuthProvider.getCredential(user.getEmail(), password);
-        user.reauthenticate(credential)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            // Reauthentication successful, now delete the account
-                            user.delete()
-                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<Void> task) {
-                                            if (task.isSuccessful()) {
-                                                // Account deleted successfully, proceed to logout
-                                                FirebaseAuth.getInstance().signOut();
-                                                // Redirect to login page
-                                                Intent intent = new Intent(requireContext(), Login.class);
-                                                startActivity(intent);
-                                                requireActivity().finish();
-                                            } else {
-                                                // Account deletion failed
-                                                Toast.makeText(requireContext(), "Failed to delete account. Please try again.", Toast.LENGTH_SHORT).show();
-                                            }
-                                        }
-                                    });
-                        } else {
-                            // Reauthentication failed
-                            Toast.makeText(requireContext(), "Reauthentication failed. Please try again.", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
+        // Set up the input
+        final EditText input = new EditText(requireContext());
+        input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        builder.setView(input);
+
+        // Set up the buttons
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String password = input.getText().toString();
+                if (TextUtils.isEmpty(password)) {
+                    Toast.makeText(requireContext(), "Password cannot be empty", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                AuthCredential credential = EmailAuthProvider.getCredential(user.getEmail(), password);
+                user.reauthenticate(credential)
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    // Reauthentication successful, now delete the account
+                                    user.delete()
+                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
+                                                    if (task.isSuccessful()) {
+                                                        // Account deleted successfully, proceed to logout
+                                                        FirebaseAuth.getInstance().signOut();
+                                                        // Redirect to login page
+                                                        Intent intent = new Intent(requireContext(), Login.class);
+                                                        startActivity(intent);
+                                                        requireActivity().finish();
+                                                    } else {
+                                                        // Account deletion failed
+                                                        Toast.makeText(requireContext(), "Failed to delete account. Please try again.", Toast.LENGTH_SHORT).show();
+                                                    }
+                                                }
+                                            });
+                                } else {
+                                    // Reauthentication failed
+                                    Toast.makeText(requireContext(), "Reauthentication failed. Please try again.", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
     }
 }
