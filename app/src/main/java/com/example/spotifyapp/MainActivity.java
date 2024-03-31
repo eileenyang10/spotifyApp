@@ -30,10 +30,12 @@ import com.spotify.sdk.android.auth.AuthorizationClient;
 import com.spotify.sdk.android.auth.AuthorizationRequest;
 import com.spotify.sdk.android.auth.AuthorizationResponse;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -96,12 +98,13 @@ public class MainActivity extends AppCompatActivity {
         // Initialize the views
         tokenTextView = (TextView) findViewById(R.id.token_text_view);
         codeTextView = (TextView) findViewById(R.id.code_text_view);
-        profileTextView = (TextView) findViewById(R.id.response_text_view);
 
         // Initialize the buttons
         Button tokenBtn = (Button) findViewById(R.id.token_btn);
         Button codeBtn = (Button) findViewById(R.id.code_btn);
-        Button profileBtn = (Button) findViewById(R.id.profile_btn);
+        // Button profileBtn = (Button) findViewById(R.id.profile_btn);
+        Button artistsBtn = (Button) findViewById(R.id.artist_btn);
+        Button tracksBtn = (Button) findViewById(R.id.tracks_btn);
 
         // Set the click listeners for the buttons
 
@@ -113,8 +116,20 @@ public class MainActivity extends AppCompatActivity {
             getCode();
         });
 
-        profileBtn.setOnClickListener((v) -> {
-            onGetUserProfileClicked();
+        //profileBtn.setOnClickListener((v) -> {
+        //    onGetUserProfileClicked();
+        //});
+
+        artistsBtn.setOnClickListener((v) -> {
+            for (String artists : getArtists()) {
+                System.out.println(artists);
+            }
+        });
+
+        tracksBtn.setOnClickListener((v) -> {
+            for (String tracks : getTracks()) {
+                System.out.println(tracks);
+            }
         });
     }
 
@@ -244,7 +259,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Create a request to get the user profile
         final Request request = new Request.Builder()
-                .url("https://api.spotify.com/v1/me")
+                .url("https://api.spotify.com/v1/me/top/tracks?time_range=long_term")
                 .addHeader("Authorization", "Bearer " + mAccessToken)
                 .build();
 
@@ -264,6 +279,7 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     final JSONObject jsonObject = new JSONObject(response.body().string());
                     setTextAsync(jsonObject.toString(3), profileTextView);
+                    System.out.println(jsonObject.toString(3));
                 } catch (JSONException e) {
                     Log.d("JSON", "Failed to parse data: " + e);
                     Toast.makeText(MainActivity.this, "Failed to parse data, watch Logcat for more details",
@@ -293,7 +309,7 @@ public class MainActivity extends AppCompatActivity {
     private AuthorizationRequest getAuthenticationRequest(AuthorizationResponse.Type type) {
         return new AuthorizationRequest.Builder(CLIENT_ID, type, getRedirectUri().toString())
                 .setShowDialog(false)
-                .setScopes(new String[]{"user-read-email"}) // <--- Change the scope of your requested token here
+                .setScopes(new String[]{"user-read-email", "user-top-read"}) // <--- Change the scope of your requested token here
                 .setCampaign("your-campaign-token")
                 .build();
     }
@@ -318,6 +334,135 @@ public class MainActivity extends AppCompatActivity {
         cancelCall();
         super.onDestroy();
     }
+
+    public ArrayList<String> getArtists() {
+        ArrayList<String> topArtists = new ArrayList<>();
+
+        if (mAccessToken == null) {
+            // If access token is null, return empty list
+            return topArtists;
+        }
+
+        // Create a request to get the user's top artists
+        final Request request = new Request.Builder()
+                .url("https://api.spotify.com/v1/me/top/artists")
+                .addHeader("Authorization", "Bearer " + mAccessToken)
+                .build();
+
+        // Execute the request asynchronously
+        cancelCall();
+        mCall = mOkHttpClient.newCall(request);
+
+        mCall.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.d("HTTP", "Failed to fetch data: " + e);
+                // Handle failure to fetch data
+                // For now, let's just print a log message
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                try {
+                    // Parse the response body as JSON
+                    JSONObject jsonObject = new JSONObject(response.body().string());
+
+                    // Get the array of items (artists)
+                    JSONArray items = jsonObject.getJSONArray("items");
+
+                    // Loop through each item (artist)
+                    for (int i = 0; i < items.length(); i++) {
+                        // Get the artist object
+                        JSONObject artist = items.getJSONObject(i);
+
+                        // Get the name of the artist
+                        String artistName = artist.getString("name");
+
+                        // Add the artist name to the list
+                        topArtists.add(artistName);
+                    }
+
+                    // Now, you can use the topArtists list as needed
+                    // For now, let's just log the list
+                    Log.d("Top Artists", topArtists.toString());
+                } catch (JSONException e) {
+                    Log.d("JSON", "Failed to parse data: " + e);
+                    // Handle failure to parse data
+                    // For now, let's just print a log message
+                }
+            }
+        });
+
+        // Return the list of top artists (this will likely be empty initially)
+        System.out.println(topArtists);
+        return topArtists;
+    }
+
+
+    public ArrayList<String> getTracks() {
+        ArrayList<String> topTracks = new ArrayList<>();
+
+        if (mAccessToken == null) {
+            // If access token is null, return empty list
+            return topTracks;
+        }
+
+        // Create a request to get the user's top tracks
+        final Request request = new Request.Builder()
+                .url("https://api.spotify.com/v1/me/top/tracks")
+                .addHeader("Authorization", "Bearer " + mAccessToken)
+                .build();
+
+        // Execute the request asynchronously
+        cancelCall();
+        mCall = mOkHttpClient.newCall(request);
+
+        mCall.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.d("HTTP", "Failed to fetch data: " + e);
+                // Handle failure to fetch data
+                // For now, let's just print a log message
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                try {
+                    // Parse the response body as JSON
+                    JSONObject jsonObject = new JSONObject(response.body().string());
+
+                    // Get the array of items (tracks)
+                    JSONArray items = jsonObject.getJSONArray("items");
+
+                    // Loop through each item (track)
+                    for (int i = 0; i < items.length(); i++) {
+                        // Get the track object
+                        JSONObject track = items.getJSONObject(i);
+
+                        // Get the name of the track
+                        String trackName = track.getString("name");
+
+                        // Add the track name to the list
+                        topTracks.add(trackName);
+                    }
+
+                    // Now, you can use the topTracks list as needed
+                    // For now, let's just log the list
+                    Log.d("Top Tracks", topTracks.toString());
+                } catch (JSONException e) {
+                    Log.d("JSON", "Failed to parse data: " + e);
+                    // Handle failure to parse data
+                    // For now, let's just print a log message
+                }
+            }
+        });
+
+        // Return the list of top tracks (this will likely be empty initially)
+        System.out.println(topTracks);
+        return topTracks;
+    }
+
+
 }
 
 
