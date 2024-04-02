@@ -101,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Initialize the buttons
         Button tokenBtn = (Button) findViewById(R.id.token_btn);
-        Button codeBtn = (Button) findViewById(R.id.code_btn);
+        //Button codeBtn = (Button) findViewById(R.id.code_btn);
         // Button profileBtn = (Button) findViewById(R.id.profile_btn);
         Button artistsBtn = (Button) findViewById(R.id.artist_btn);
         Button tracksBtn = (Button) findViewById(R.id.tracks_btn);
@@ -110,15 +110,11 @@ public class MainActivity extends AppCompatActivity {
 
         tokenBtn.setOnClickListener((v) -> {
             getToken();
-        });
 
-        codeBtn.setOnClickListener((v) -> {
-            getCode();
+            if (mAccessToken != null) {
+                getCode();
+            }
         });
-
-        //profileBtn.setOnClickListener((v) -> {
-        //    onGetUserProfileClicked();
-        //});
 
         artistsBtn.setOnClickListener((v) -> {
             for (String artists : getArtists()) {
