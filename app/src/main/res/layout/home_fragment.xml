@@ -39,7 +39,7 @@
         app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
     <TextView
-        android:id="@+id/topSong"
+        android:id="@+id/topTrack"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="46dp"
@@ -49,7 +49,7 @@
         android:text="Top Songs"
         android:textSize="20sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/topSongList"
+        app:layout_constraintBottom_toTopOf="@+id/topTrackList"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/topArtist"
         app:layout_constraintTop_toBottomOf="@+id/imageView"
@@ -66,11 +66,10 @@
         app:layout_constraintTop_toBottomOf="@+id/topArtist" />
 
     <TextView
-        android:id="@+id/topSongList"
+        android:id="@+id/topTrackList"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
         android:text="TextView"
-        app:layout_constraintTop_toBottomOf="@+id/topSong"
         tools:layout_editor_absoluteX="263dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>

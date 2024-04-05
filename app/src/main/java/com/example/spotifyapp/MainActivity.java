@@ -13,6 +13,9 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -60,6 +63,12 @@ public class MainActivity extends AppCompatActivity {
     private Call mCall;
     private TextView tokenTextView, codeTextView, profileTextView;
 
+    private Bundle bundle;
+
+    private WrapperFragment wrapped;
+
+    private ArrayList<String> topArtists = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,6 +115,21 @@ public class MainActivity extends AppCompatActivity {
 
         // Set the click listeners for the buttons
 
+        getToken();
+        if (mAccessToken != null) {
+            getCode();
+        }
+
+        wrapped = new WrapperFragment();
+
+        getArtists();
+
+        bundle = new Bundle();
+        bundle.putStringArrayList("topArtistList", getArtists());
+        bundle.putStringArrayList("topTrackList", getTracks());
+
+
+        wrapped.setArguments(bundle);
         tokenBtn.setOnClickListener((v) -> {
             getToken();
 
@@ -118,6 +142,7 @@ public class MainActivity extends AppCompatActivity {
             for (String artists : getArtists()) {
                 System.out.println(artists);
             }
+
         });
 
         tracksBtn.setOnClickListener((v) -> {
@@ -234,10 +259,12 @@ public class MainActivity extends AppCompatActivity {
         if (AUTH_TOKEN_REQUEST_CODE == requestCode) {
             mAccessToken = response.getAccessToken();
             setTextAsync(mAccessToken, tokenTextView);
+            setBundle(getArtists(), "topArtistList");
 
         } else if (AUTH_CODE_REQUEST_CODE == requestCode) {
             mAccessCode = response.getCode();
             setTextAsync(mAccessCode, codeTextView);
+
         }
     }
 
@@ -294,6 +321,10 @@ public class MainActivity extends AppCompatActivity {
         runOnUiThread(() -> textView.setText(text));
     }
 
+    private void setBundle (final ArrayList<String> text, String key) {
+        runOnUiThread(() -> bundle.putStringArrayList(key, text));
+    }
+
     /**
      * Get authentication request
      *
@@ -330,7 +361,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public ArrayList<String> getArtists() {
-        ArrayList<String> topArtists = new ArrayList<>();
 
         if (mAccessToken == null) {
             // If access token is null, return empty list
@@ -379,6 +409,10 @@ public class MainActivity extends AppCompatActivity {
                     // Now, you can use the topArtists list as needed
                     // For now, let's just log the list
                     Log.d("Top Artists", topArtists.toString());
+                    //setBundle(topArtists, "topArtistList");
+                    //bundle.putStringArrayList("topArtistList", topArtists);
+                    //wrapped.updateArtist(topArtists);
+                    setTextAsync(topArtists.toString(), tokenTextView);
                 } catch (JSONException e) {
                     Log.d("JSON", "Failed to parse data: " + e);
                     // Handle failure to parse data
@@ -388,7 +422,8 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // Return the list of top artists (this will likely be empty initially)
-        System.out.println(topArtists);
+        System.out.println("artists: " + topArtists);
+
         return topArtists;
     }
 

@@ -10,6 +10,12 @@
         android:name="com.example.spotifyapp.WrapperFragment"
         android:label="Home"
         tools:layout="@layout/home_fragment" >
+        <argument
+            android:name="topArtistList"
+            app:argType="string[]" />
+        <argument
+            android:name="topTrackLlist"
+            app:argType="string[]" />
     </fragment>
 
     <fragment
