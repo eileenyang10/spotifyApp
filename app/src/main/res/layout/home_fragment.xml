@@ -17,7 +17,7 @@
         android:layout_marginBottom="46dp"
         app:layout_constraintBottom_toTopOf="@+id/topArtist"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.494"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0"
@@ -39,7 +39,7 @@
         app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
     <TextView
-        android:id="@+id/topTrack"
+        android:id="@+id/topSong"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="46dp"
@@ -59,8 +59,8 @@
         android:id="@+id/topArtistList"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="56dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginStart="80dp"
+        android:layout_marginTop="12dp"
         android:text="TextView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/topArtist" />
@@ -69,7 +69,8 @@
         android:id="@+id/topTrackList"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="12dp"
         android:text="TextView"
-        tools:layout_editor_absoluteX="263dp" />
+        app:layout_constraintTop_toBottomOf="@+id/topSong"
+        tools:layout_editor_absoluteX="317dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>
