@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="user_details" type="id" />
+    <item name="lyricsTextView" type="id" />
+    <item name="answerEditText" type="id" />
+    <item name="submitButton" type="id" />
+    <item name="songTextView" type="id" />
+    <item name="scoreTextView" type="id" />
+</resources>
