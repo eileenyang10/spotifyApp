@@ -29,9 +29,9 @@
 
     <fragment
         android:id="@+id/navigation_games"
-        android:name="com.example.spotifyapp.GameFragment"
+        android:name="com.example.spotifyapp.GamesTabFragment"
         android:label="Games"
-        tools:layout="@layout/game_fragment" >
+        tools:layout="@layout/fragment_games_tab">
     </fragment>
 
     <fragment
