@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- fragment_game2.xml -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -7,19 +8,13 @@
     android:padding="16dp">
 
     <TextView
-        android:id="@+id/songTextView"
+        android:id="@+id/questionTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="18sp"
         android:layout_marginBottom="16dp"
-        android:text="What playlist is this song in?" />
+        android:text="Who is the artist of the song?" />
 
-    <ImageView
-        android:id="@+id/gameImageView"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:scaleType="fitCenter"
-        android:adjustViewBounds="true" />
 
     <Button
         android:id="@+id/option1Button"
@@ -50,11 +45,9 @@
 
     <TextView
         android:id="@+id/scoreTextView"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Score: 0"
         android:textSize="18sp"
-        android:layout_marginTop="16dp" />
-
-
+        android:layout_marginTop="16dp"
+        android:text="Score: 0" />
 </LinearLayout>

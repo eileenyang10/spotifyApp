@@ -1,13 +1,15 @@
-package com.example.spotifyapp;// GamesTabFragment.java
+package com.example.spotifyapp;
+
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import android.os.Bundle;
-import android.view.*;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
-import com.example.spotifyapp.R;
 import com.google.android.material.tabs.TabLayout;
 
 public class GamesTabFragment extends Fragment {
@@ -19,7 +21,8 @@ public class GamesTabFragment extends Fragment {
         ViewPager viewPager = view.findViewById(R.id.viewPager);
         TabLayout tabLayout = view.findViewById(R.id.tabLayout);
 
-        viewPager.setAdapter(new GamesPagerAdapter(getChildFragmentManager()));
+        GamesPagerAdapter gamesPagerAdapter = new GamesPagerAdapter(getChildFragmentManager());
+        viewPager.setAdapter(gamesPagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
 
         return view;
@@ -28,7 +31,7 @@ public class GamesTabFragment extends Fragment {
     private class GamesPagerAdapter extends FragmentPagerAdapter {
 
         public GamesPagerAdapter(FragmentManager fm) {
-            super(fm);
+            super(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         }
 
         @Override
