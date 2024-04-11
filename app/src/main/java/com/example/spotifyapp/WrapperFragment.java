@@ -103,7 +103,11 @@ public class WrapperFragment extends Fragment {
      * @param textView TextView object to update
      */
     private void setTextAsync(final String text, TextView textView) {
-        getActivity().runOnUiThread(() -> textView.setText(text));
+        getActivity().runOnUiThread(() -> {
+            if (isAdded()) {
+                textView.setText(text);
+            }
+        });
     }
 
     @Override
