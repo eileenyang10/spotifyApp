@@ -1,8 +1,12 @@
 package com.example.spotifyapp;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -11,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,6 +47,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 
 import okhttp3.Call;
@@ -49,6 +55,8 @@ import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Response;
 import okhttp3.Request;;
+
+import com.bumptech.glide.Glide;
 
 public class WrapperFragment extends Fragment {
 
@@ -63,14 +71,9 @@ public class WrapperFragment extends Fragment {
 
     private final OkHttpClient mOkHttpClient = new OkHttpClient();
     private String mAccessToken, mAccessCode;
-    //private Call mCall;
-    private TextView tokenTextView, codeTextView, profileTextView;
-
-    private Bundle bundle;
-
-    private WrapperFragment wrapped;
-    private TextView topArtistList;
-    private TextView topTrackList;
+    private TextView topArtistList, topTrackList, topGenreList;
+    private String time;
+    private ImageView album;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -79,11 +82,16 @@ public class WrapperFragment extends Fragment {
 
         mAccessToken = ((MainActivity)getActivity()).getmAccessToken();
 
-        topArtistList = (TextView) view.findViewById(R.id.topArtistList);
-        getArtists();
+        time = getArguments().getString("time");
 
+        topArtistList = (TextView) view.findViewById(R.id.topArtistList);
         topTrackList = (TextView) view.findViewById(R.id.topTrackList);
+        topGenreList = (TextView) view.findViewById(R.id.topGenreList);
+        album = (ImageView) view.findViewById(R.id.albumImage);
+
+        getArtists();
         getTracks();
+
         return view;
     }
 
@@ -98,15 +106,8 @@ public class WrapperFragment extends Fragment {
         getActivity().runOnUiThread(() -> textView.setText(text));
     }
 
-//    private void cancelCall() {
-//        if (mCall != null) {
-//            mCall.cancel();
-//        }
-//    }
-
     @Override
     public void onDestroy() {
-        //cancelCall();
         super.onDestroy();
     }
 
@@ -121,7 +122,7 @@ public class WrapperFragment extends Fragment {
 
         // Create a request to get the user's top artists
         final Request request = new Request.Builder()
-                .url("https://api.spotify.com/v1/me/top/artists")
+                .url("https://api.spotify.com/v1/me/top/artists?time_range="+time)
                 .addHeader("Authorization", "Bearer " + mAccessToken)
                 .build();
 
@@ -161,7 +162,25 @@ public class WrapperFragment extends Fragment {
                     // Now, you can use the topArtists list as needed
                     // For now, let's just log the list
                     Log.d("Top Artists", topArtists.toString());
-                    setTextAsync(topArtists.toString(), topArtistList);
+                    String top = topArtists.get(0) + "\n" + topArtists.get(1) + "\n" + topArtists.get(2);
+                    setTextAsync(top, topArtistList);
+
+
+                    JSONObject artist = items.getJSONObject(0);
+
+                    JSONArray genre = artist.getJSONArray("genres");
+                    setTextAsync(genre.get(0).toString(), topGenreList);
+
+                    JSONArray images = artist.getJSONArray("images");
+                    String imageUrl = images.getJSONObject(0).getString("url");
+
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Glide.with(getActivity())
+                                    .load(imageUrl)
+                                    .into(album);                                    }
+                    });
                 } catch (JSONException e) {
                     Log.d("JSON", "Failed to parse data: " + e);
                     // Handle failure to parse data
@@ -187,7 +206,7 @@ public class WrapperFragment extends Fragment {
 
         // Create a request to get the user's top tracks
         final Request request = new Request.Builder()
-                .url("https://api.spotify.com/v1/me/top/tracks")
+                .url("https://api.spotify.com/v1/me/top/tracks?time_range="+time)
                 .addHeader("Authorization", "Bearer " + mAccessToken)
                 .build();
 
@@ -227,7 +246,9 @@ public class WrapperFragment extends Fragment {
                     // Now, you can use the topTracks list as needed
                     // For now, let's just log the list
                     Log.d("Top Tracks", topTracks.toString());
-                    setTextAsync(topTracks.toString(), topTrackList);
+                    String top = topTracks.get(0) + "\n" + topTracks.get(1) + "\n" + topTracks.get(2);
+                    setTextAsync(top, topTrackList);
+
                 } catch (JSONException e) {
                     Log.d("JSON", "Failed to parse data: " + e);
                     // Handle failure to parse data
