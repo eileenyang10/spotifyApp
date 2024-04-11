@@ -6,16 +6,25 @@
     app:startDestination="@+id/navigation_home">
 
     <fragment
+        android:id="@+id/navigation_home_generate"
+        android:name="com.example.spotifyapp.GenerateWrapped"
+        android:label="Home"
+        tools:layout="@layout/generate_wrapped" >
+        <action
+            android:id="@+id/action_generateWrapped_to_navigation_home"
+            app:destination="@id/navigation_home" />
+    </fragment>
+
+    <fragment
         android:id="@+id/navigation_home"
         android:name="com.example.spotifyapp.WrapperFragment"
         android:label="Home"
         tools:layout="@layout/home_fragment" >
+
         <argument
-            android:name="topArtistList"
-            app:argType="string[]" />
-        <argument
-            android:name="topTrackLlist"
-            app:argType="string[]" />
+            android:name="time"
+            app:argType="string"
+            android:defaultValue='"medium_term"' />
     </fragment>
 
     <fragment
@@ -38,5 +47,6 @@
         android:label="Profile"
         tools:layout="@layout/profile_fragment" >
     </fragment>
+
 
 </navigation>

@@ -6,4 +6,6 @@
     <item name="submitButton" type="id" />
     <item name="songTextView" type="id" />
     <item name="scoreTextView" type="id" />
+    <item name="title_text" type="id" />
+    <item name="question_field" type="id" />
 </resources>

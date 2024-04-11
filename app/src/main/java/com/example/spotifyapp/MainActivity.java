@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
     private final OkHttpClient mOkHttpClient = new OkHttpClient();
     private String mAccessToken, mAccessCode;
     private Call mCall;
-    private TextView tokenTextView, codeTextView, profileTextView;
+    //private TextView tokenTextView, codeTextView, profileTextView;
 
     private Bundle bundle;
 
@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
                 .build();
 
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
-
+        navController.navigate(R.id.navigation_home_generate);
         // Setup action bar with NavController
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
 
@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(binding.navView, navController);
 
         auth = FirebaseAuth.getInstance();
-        textView = findViewById(R.id.user_details);
+//        textView = findViewById(R.id.user_details);
         user = auth.getCurrentUser();
 
         // Check if user returns null, meaning user is not logged in
@@ -103,15 +103,15 @@ public class MainActivity extends AppCompatActivity {
             finish();
         }
         // Initialize the views
-        tokenTextView = (TextView) findViewById(R.id.token_text_view);
-        codeTextView = (TextView) findViewById(R.id.code_text_view);
-
-        // Initialize the buttons
-        Button tokenBtn = (Button) findViewById(R.id.token_btn);
-        //Button codeBtn = (Button) findViewById(R.id.code_btn);
-        // Button profileBtn = (Button) findViewById(R.id.profile_btn);
-        Button artistsBtn = (Button) findViewById(R.id.artist_btn);
-        Button tracksBtn = (Button) findViewById(R.id.tracks_btn);
+//        tokenTextView = (TextView) findViewById(R.id.token_text_view);
+//        codeTextView = (TextView) findViewById(R.id.code_text_view);
+//
+//        // Initialize the buttons
+//        Button tokenBtn = (Button) findViewById(R.id.token_btn);
+//        //Button codeBtn = (Button) findViewById(R.id.code_btn);
+//        // Button profileBtn = (Button) findViewById(R.id.profile_btn);
+//        Button artistsBtn = (Button) findViewById(R.id.artist_btn);
+//        Button tracksBtn = (Button) findViewById(R.id.tracks_btn);
 
         getToken();
         if (mAccessToken != null) {
@@ -168,25 +168,21 @@ public class MainActivity extends AppCompatActivity {
         // Check which request code is present (if any)
         if (AUTH_TOKEN_REQUEST_CODE == requestCode) {
             mAccessToken = response.getAccessToken();
-            setTextAsync(mAccessToken, tokenTextView);
-
         } else if (AUTH_CODE_REQUEST_CODE == requestCode) {
             mAccessCode = response.getCode();
-            setTextAsync(mAccessCode, codeTextView);
-
         }
     }
 
-    /**
-     * Creates a UI thread to update a TextView in the background
-     * Reduces UI latency and makes the system perform more consistently
-     *
-     * @param text     the text to set
-     * @param textView TextView object to update
-     */
-    private void setTextAsync(final String text, TextView textView) {
-        runOnUiThread(() -> textView.setText(text));
-    }
+//    /**
+//     * Creates a UI thread to update a TextView in the background
+//     * Reduces UI latency and makes the system perform more consistently
+//     *
+//     * @param text     the text to set
+//     * @param textView TextView object to update
+//     */
+//    private void setTextAsync(final String text, TextView textView) {
+//        runOnUiThread(() -> textView.setText(text));
+//    }
 
     /**
      * Get authentication request
