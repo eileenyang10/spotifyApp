@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(binding.navView, navController);
 
         auth = FirebaseAuth.getInstance();
-        textView = findViewById(R.id.user_details);
+//        textView = findViewById(R.id.user_details);
         user = auth.getCurrentUser();
 
         // Check if user returns null, meaning user is not logged in
