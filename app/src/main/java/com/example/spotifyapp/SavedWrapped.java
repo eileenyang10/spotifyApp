@@ -13,6 +13,8 @@ import android.widget.Spinner;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -41,18 +43,6 @@ public class SavedWrapped extends Fragment {
         mDatabase = database.getReference("wrapped");
 
         List<Wrapped> items = new ArrayList<>();
-//        mDatabase.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<DataSnapshot> task) {
-//                if (!task.isSuccessful()) {
-//                    Log.e("firebase", "Error getting data", task.getException());
-//                }
-//                else {
-//                    Log.d("firebase", String.valueOf(task.getResult().getValue()));
-//                    items.add(task.getResult().getValue(Wrapped.class));
-//                }
-//            }
-//        });
 
             Bundle args = new Bundle();
 
@@ -70,9 +60,6 @@ public class SavedWrapped extends Fragment {
                     // Handle the case where the dataSnapshot is empty or doesn't exist
                     Log.d("FirebaseArray", "No data found");
                 }
-
-
-
 
                 ArrayAdapter<Wrapped> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, items);
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -107,6 +94,7 @@ public class SavedWrapped extends Fragment {
         });
         return view;
     }
+
 
 }
 

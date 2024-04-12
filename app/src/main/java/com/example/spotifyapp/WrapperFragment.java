@@ -101,7 +101,7 @@ public class WrapperFragment extends Fragment {
         topGenreList = (TextView) view.findViewById(R.id.topGenreList);
         album = (ImageView) view.findViewById(R.id.albumImage);
 
-        if (newWrap != null) {
+        if (newWrap != null && newWrap.getName() != null) {
             Log.d("wrap is not null", newWrap.toString());
             ArrayList<String> artists = newWrap.getArtists();
             topArtistList.setText(String.format("%s\n%s\n%s", artists.get(0), artists.get(1), artists.get(2)));
@@ -188,12 +188,6 @@ public class WrapperFragment extends Fragment {
 
         if (mAccessToken == null) {
             // If access token is null, return empty list
-            return topArtists;
-        }
-
-        if (topArtists != null && topArtists.size() > 0) {
-            String top = topArtists.get(0) + "\n" + topArtists.get(1) + "\n" + topArtists.get(2);
-            setTextAsync(top, topArtistList);
             return topArtists;
         }
 

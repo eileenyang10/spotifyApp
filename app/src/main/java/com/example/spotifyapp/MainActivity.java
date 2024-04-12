@@ -191,6 +191,15 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
+    @Override
+    public void onBackPressed() {
+        // Handle back button press
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
+        if (!navController.popBackStack()) {
+            super.onBackPressed();
+        }
+    }
+
 }
 
 
