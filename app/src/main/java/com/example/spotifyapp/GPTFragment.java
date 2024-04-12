@@ -71,7 +71,7 @@ public class GPTFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 String question = questionField.getText().toString();
-                sendQuestionToAPI("I want to ask about my music taste. Here are my top artists and tracks: Artists: " + artistList + " Tracks: " + trackList + ". My question is: " + question + " Make your response very conversational and short and easy to read. Respond in this format: [Restate question] [Response]. Do not include the brackets and text inside brackets. I just want you to restate the question and then respond to it in a new line.");
+                sendQuestionToAPI("I want to ask about my music taste. Here are my top artists and tracks: Artists: " + artistList + " Tracks: " + trackList + ". My question is: " + question + " Make your response very conversational and short and easy to read. I just want you to provide the response in a short/concise manner and in a conversational manner.");
                 InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
 
