@@ -101,20 +101,21 @@ public class WrapperFragment extends Fragment {
         topGenreList = (TextView) view.findViewById(R.id.topGenreList);
         album = (ImageView) view.findViewById(R.id.albumImage);
 
-//        if (newWrap != null) {
-//            ArrayList<String> artists = newWrap.getArtists();
-//            topArtistList.setText(String.format("%s\n%s\n%s", artists.get(0), artists.get(1), artists.get(2)));
-//            ArrayList<String> tracks = newWrap.getTracks();
-//            topTrackList.setText(String.format("%s\n%s\n%s", tracks.get(0), tracks.get(1), tracks.get(2)));
-//            ArrayList<String> genres = newWrap.getGenres();
-//            topGenreList.setText(genres.get(0));
-//
-//            Glide.with(getActivity()).load(newWrap.getImage()).into(album);
-//        } else {
+        if (newWrap != null) {
+            Log.d("wrap is not null", newWrap.toString());
+            ArrayList<String> artists = newWrap.getArtists();
+            topArtistList.setText(String.format("%s\n%s\n%s", artists.get(0), artists.get(1), artists.get(2)));
+            ArrayList<String> tracks = newWrap.getTracks();
+            topTrackList.setText(String.format("%s\n%s\n%s", tracks.get(0), tracks.get(1), tracks.get(2)));
+            ArrayList<String> genres = newWrap.getGenres();
+            topGenreList.setText(genres.get(0));
+
+            Glide.with(getActivity()).load(newWrap.getImage()).into(album);
+        } else {
             newWrap = new Wrapped();
             getArtists();
             getTracks();
-//        }
+        }
 
 
         setHasOptionsMenu(true);
@@ -187,6 +188,12 @@ public class WrapperFragment extends Fragment {
 
         if (mAccessToken == null) {
             // If access token is null, return empty list
+            return topArtists;
+        }
+
+        if (topArtists != null && topArtists.size() > 0) {
+            String top = topArtists.get(0) + "\n" + topArtists.get(1) + "\n" + topArtists.get(2);
+            setTextAsync(top, topArtistList);
             return topArtists;
         }
 

@@ -54,6 +54,8 @@ public class SavedWrapped extends Fragment {
 //            }
 //        });
 
+            Bundle args = new Bundle();
+
             mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -68,6 +70,24 @@ public class SavedWrapped extends Fragment {
                     // Handle the case where the dataSnapshot is empty or doesn't exist
                     Log.d("FirebaseArray", "No data found");
                 }
+
+
+
+
+                ArrayAdapter<Wrapped> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, items);
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spinner.setAdapter(adapter);
+                spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                        args.putSerializable("loadWrap", items.get(position));
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parentView) {
+                        // Another interface callback
+                    }
+                });
             }
 
             @Override
@@ -77,22 +97,7 @@ public class SavedWrapped extends Fragment {
             }
         });
 
-        Bundle args = new Bundle();
 
-        ArrayAdapter<Wrapped> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, items);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                args.putSerializable("loadWrap", items.get(position));
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parentView) {
-                // Another interface callback
-            }
-        });
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
