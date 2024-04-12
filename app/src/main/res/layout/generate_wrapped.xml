@@ -11,29 +11,23 @@
         android:id="@+id/button"
         android:layout_width="wrap_content"
         android:layout_height="48dp"
-        android:layout_marginStart="14dp"
-        android:layout_marginTop="330dp"
-        android:layout_marginEnd="74dp"
-        android:layout_marginBottom="356dp"
-        android:text="Wrapped!"
+        android:text="Get My Wrapped!"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/savedWraps"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/savedWraps"
+        app:layout_constraintVertical_bias="0.206" />
 
     <Spinner
         android:id="@+id/savedWraps"
-        android:layout_width="163dp"
-        android:layout_height="37dp"
-        android:layout_marginStart="74dp"
-        android:layout_marginTop="330dp"
-        android:layout_marginEnd="14dp"
-        android:layout_marginBottom="356dp"
+        android:layout_width="198dp"
+        android:layout_height="55dp"
+        android:backgroundTint="#C891FF"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/button"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.409" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

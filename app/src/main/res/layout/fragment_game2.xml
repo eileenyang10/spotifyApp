@@ -9,9 +9,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:textAlignment="center"
         android:layout_marginTop="32dp"
+        android:paddingHorizontal="8sp"
         android:text="Who is the artist of the song?"
+        android:textAlignment="center"
         android:textSize="24sp"
         android:textStyle="bold" />
 

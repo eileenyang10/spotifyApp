@@ -4,20 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/profile_background"
+    android:background="@drawable/greenbg"
     tools:context="com.example.spotifyapp.WrapperFragment">
 
     <ImageView
         android:id="@+id/albumImage"
-        android:layout_width="300dp"
-        android:layout_height="300dp"
+        android:layout_width="175dp"
+        android:layout_height="183dp"
         android:layout_marginStart="55dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="108dp"
         android:layout_marginEnd="55dp"
-        android:layout_marginBottom="41dp"
-        app:layout_constraintBottom_toTopOf="@+id/topSong"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:src="@tools:sample/avatars" />
@@ -26,43 +23,38 @@
         android:id="@+id/topSong"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="41dp"
-        android:layout_marginEnd="65dp"
+        android:layout_marginTop="56dp"
         android:fontFamily="sans-serif-medium"
-        android:text="Top Songs"
+        android:text="Top Songs..."
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.487"
+        app:layout_constraintStart_toEndOf="@+id/topArtists"
         app:layout_constraintTop_toBottomOf="@+id/albumImage" />
 
     <TextView
         android:id="@+id/topTrackList"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="131dp"
-        android:layout_marginTop="12dp"
         android:layout_marginEnd="84dp"
-        android:layout_marginBottom="188dp"
         android:text="TextView"
-        app:layout_constraintBottom_toTopOf="@+id/topGenreList"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/topArtistList"
-        app:layout_constraintTop_toBottomOf="@+id/topSong" />
+        app:layout_constraintTop_toBottomOf="@+id/topSong"
+        app:layout_constraintVertical_bias="0.08" />
 
     <TextView
         android:id="@+id/topArtists"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="64dp"
-        android:layout_marginTop="41dp"
-        android:layout_marginEnd="86dp"
-        android:layout_marginBottom="12dp"
+        android:layout_marginStart="56dp"
+        android:layout_marginTop="56dp"
         android:fontFamily="sans-serif-medium"
-        android:text="Top Artists"
+        android:text="Top Artists..."
         android:textSize="20sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/topArtistList"
-        app:layout_constraintEnd_toStartOf="@+id/topSong"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/albumImage" />
 
@@ -70,41 +62,54 @@
         android:id="@+id/topGenre"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="90dp"
-        android:layout_marginTop="140dp"
-        android:layout_marginEnd="11dp"
-        android:layout_marginBottom="70dp"
+        android:layout_marginTop="200dp"
         android:fontFamily="sans-serif-medium"
-        android:text="Top Genre"
+        android:text="Your Favorite Genre..."
         android:textSize="20sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/topGenreList"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/topArtistList" />
+        app:layout_constraintTop_toBottomOf="@+id/albumImage" />
 
     <TextView
         android:id="@+id/topArtistList"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="80dp"
-        android:layout_marginBottom="282dp"
+        android:layout_marginTop="28dp"
         android:text="TextView"
+        android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintEnd_toStartOf="@+id/topTrackList"
+        app:layout_constraintHorizontal_bias="0.416"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/topArtists"
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/topGenreList"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="140dp"
-        android:layout_marginEnd="159dp"
-        android:layout_marginBottom="75dp"
         android:text="TextView"
+        android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/topArtists"
-        app:layout_constraintTop_toBottomOf="@+id/topArtistList" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/topGenre"
+        app:layout_constraintVertical_bias="0.121" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="415dp"
+        android:layout_height="34dp"
+        android:backgroundTint="#9C27B0"
+        android:text="Your Top Album Was..."
+        android:textAlignment="center"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/albumImage"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
