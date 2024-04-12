@@ -25,6 +25,15 @@
             android:name="time"
             app:argType="string"
             android:defaultValue='"medium_term"' />
+        <action
+            android:id="@+id/action_navigation_home_to_navigation_home_generate"
+            app:destination="@id/navigation_home_generate" />
+        <action
+            android:id="@+id/action_navigation_home_to_savedWrapped"
+            app:destination="@id/savedWrapped" />
+        <argument
+            android:name="loadWrap"
+            app:argType="com.example.spotifyapp.Wrapped" />
     </fragment>
 
     <fragment
@@ -46,6 +55,15 @@
         android:name="com.example.spotifyapp.ProfileFragment"
         android:label="Profile"
         tools:layout="@layout/profile_fragment" >
+    </fragment>
+    <fragment
+        android:id="@+id/savedWrapped"
+        android:name="com.example.spotifyapp.SavedWrapped"
+        android:label="SavedWrapped"
+        tools:layout="@layout/generate_saved_wrap">
+        <action
+            android:id="@+id/action_savedWrapped_to_navigation_home"
+            app:destination="@id/navigation_home" />
     </fragment>
 
 
