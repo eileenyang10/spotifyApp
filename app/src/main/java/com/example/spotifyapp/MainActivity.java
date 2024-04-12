@@ -86,6 +86,7 @@ public class MainActivity extends AppCompatActivity {
 
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
         navController.navigate(R.id.navigation_home_generate);
+
         // Setup action bar with NavController
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
 
@@ -93,7 +94,6 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(binding.navView, navController);
 
         auth = FirebaseAuth.getInstance();
-//        textView = findViewById(R.id.user_details);
         user = auth.getCurrentUser();
 
         // Check if user returns null, meaning user is not logged in
@@ -102,16 +102,6 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         }
-        // Initialize the views
-//        tokenTextView = (TextView) findViewById(R.id.token_text_view);
-//        codeTextView = (TextView) findViewById(R.id.code_text_view);
-//
-//        // Initialize the buttons
-//        Button tokenBtn = (Button) findViewById(R.id.token_btn);
-//        //Button codeBtn = (Button) findViewById(R.id.code_btn);
-//        // Button profileBtn = (Button) findViewById(R.id.profile_btn);
-//        Button artistsBtn = (Button) findViewById(R.id.artist_btn);
-//        Button tracksBtn = (Button) findViewById(R.id.tracks_btn);
 
         getToken();
         if (mAccessToken != null) {
@@ -124,14 +114,14 @@ public class MainActivity extends AppCompatActivity {
         return mAccessToken;
     }
 
-    // Override onBackPressed to handle fragment navigation
-    @Override
-    public void onBackPressed() {
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
-        if (!navController.popBackStack()) {
-            super.onBackPressed();
-        }
-    }
+//    // Override onBackPressed to handle fragment navigation
+//    @Override
+//    public void onBackPressed() {
+//        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
+//        if (!navController.popBackStack()) {
+//            super.onBackPressed();
+//        }
+//    }
 
     /**
      * Get token from Spotify
@@ -172,17 +162,6 @@ public class MainActivity extends AppCompatActivity {
             mAccessCode = response.getCode();
         }
     }
-
-//    /**
-//     * Creates a UI thread to update a TextView in the background
-//     * Reduces UI latency and makes the system perform more consistently
-//     *
-//     * @param text     the text to set
-//     * @param textView TextView object to update
-//     */
-//    private void setTextAsync(final String text, TextView textView) {
-//        runOnUiThread(() -> textView.setText(text));
-//    }
 
     /**
      * Get authentication request
