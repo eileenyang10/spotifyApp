@@ -6,17 +6,19 @@
     android:orientation="vertical"
     android:gravity="center"
     android:padding="15dp"
+    android:background="@drawable/background1"
     android:layout_height="match_parent"
     tools:context=".Register">
 
     <TextView
+        android:layout_width="match_parent"
+        android:layout_height="350dp"
+        android:layout_marginBottom="20dp"
+        android:gravity="center"
+        android:paddingTop="50dp"
         android:text="@string/register"
         android:textSize="25sp"
-        android:textStyle="bold"
-        android:gravity="center"
-        android:layout_marginBottom="20dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:textStyle="bold" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"

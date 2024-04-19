@@ -1,17 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fillViewport="true">
-
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F5F5F5"
+    android:background="@drawable/background2"
     android:padding="16dp"
     tools:context="com.example.spotifyapp.GPTFragment">
 
@@ -20,6 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:background="#FFFFFF"
+        android:alpha="0.8"
         android:elegantTextHeight="false"
         android:hint="Ask anything about your music taste!"
         android:inputType="textMultiLine"
@@ -29,13 +23,12 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
     <Button
         android:id="@+id/submit_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Ask away!"
-        android:backgroundTint="#008000"
+        android:backgroundTint="#6445B6"
         android:textColor="#FFFFFF"
         app:layout_constraintTop_toBottomOf="@+id/question_field"
         app:layout_constraintBottom_toTopOf="@+id/horizontal_bar"
@@ -70,6 +63,7 @@
         android:layout_height="0dp"
         android:layout_weight="3"
         android:textSize="16sp"
+        android:alpha="0.8"
         android:textColor="#000000"
         android:background="#FFFFFF"
         android:padding="8dp"
@@ -79,4 +73,3 @@
         app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
-</ScrollView>
