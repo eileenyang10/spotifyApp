@@ -1,9 +1,12 @@
 package com.example.spotifyapp;
 
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -188,19 +191,32 @@ public class GameFragment2 extends Fragment {
             option4Button.setText(answers[3]);
 
             // Set click listeners for the buttons
-            option1Button.setOnClickListener(v -> checkAnswer(answers[0], correctAnswer));
-            option2Button.setOnClickListener(v -> checkAnswer(answers[1], correctAnswer));
-            option3Button.setOnClickListener(v -> checkAnswer(answers[2], correctAnswer));
-            option4Button.setOnClickListener(v -> checkAnswer(answers[3], correctAnswer));
+            option1Button.setOnClickListener(v -> checkAnswer(answers[0], correctAnswer, option1Button));
+            option2Button.setOnClickListener(v -> checkAnswer(answers[1], correctAnswer, option2Button));
+            option3Button.setOnClickListener(v -> checkAnswer(answers[2], correctAnswer, option3Button));
+            option4Button.setOnClickListener(v -> checkAnswer(answers[3], correctAnswer, option4Button));
         }
     }
 
-    private void checkAnswer(String selectedAnswer, String correctAnswer) {
+    private void checkAnswer(String selectedAnswer, String correctAnswer, Button selectedButton) {
             if (isAdded()) {
                 if (selectedAnswer.equals(correctAnswer)) {
                     // The answer is correct
-                    // TODO: Handle correct answer
-                    Toast.makeText(getActivity(), "Correct!", Toast.LENGTH_SHORT).show();
+                    Animation correctAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.correct_answer);
+                    selectedButton.startAnimation(correctAnimation);
+                    // Toast animation
+                    LayoutInflater inflater = getLayoutInflater();
+                    View layout = inflater.inflate(R.layout.toast_correct, (ViewGroup) getView().findViewById(R.id.toast_root));
+                    Toast toast = new Toast(getActivity());
+                    toast.setGravity(Gravity.CENTER, 0, 0);
+                    toast.setDuration(Toast.LENGTH_SHORT);
+                    toast.setView(layout);
+                    // Load the fade-out animation
+                    Animation fadeOut = AnimationUtils.loadAnimation(getActivity(), R.anim.toast_fade);
+
+                    // Apply the animation to the Toast
+                    layout.startAnimation(fadeOut);
+                    toast.show();
                     score++;
                     startNewQuestion();
                 } else {
