@@ -221,8 +221,16 @@ public class GameFragment2 extends Fragment {
                     startNewQuestion();
                 } else {
                     // The answer is wrong
-                    // TODO: Handle wrong answer
-                    Toast.makeText(getActivity(), "Incorrect. Try again!", Toast.LENGTH_SHORT).show();
+                    Animation shakeAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.shake);
+                    selectedButton.startAnimation(shakeAnimation);
+
+                    LayoutInflater inflater = getLayoutInflater();
+                    View layout = inflater.inflate(R.layout.toast_wrong, (ViewGroup) getView().findViewById(R.id.toast_root));
+                    Toast toast = new Toast(getActivity());
+                    toast.setGravity(Gravity.CENTER, 0, 0);
+                    toast.setDuration(Toast.LENGTH_SHORT);
+                    toast.setView(layout);
+                    toast.show();
                     score = 0;
                 }
                 // Start a new question
