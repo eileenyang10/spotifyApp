@@ -129,7 +129,7 @@ public class GenerateWrapped extends Fragment {
                     // Get the array of items (artists)
                     JSONArray items = jsonObject.getJSONArray("items");
 
-
+                    ArrayList<String> topGenres = new ArrayList<>();
                     // Loop through each item (artist)
                     for (int i = 0; i < items.length(); i++) {
                         // Get the artist object
@@ -137,6 +137,14 @@ public class GenerateWrapped extends Fragment {
 
                         // Get the name of the artist
                         String artistName = artist.getString("name");
+
+                        JSONArray genres = artist.getJSONArray("genres");
+
+                        for (int j = 0; j < genres.length(); j++) {
+                            if (!topGenres.contains(genres.get(j).toString())) {
+                                topGenres.add(genres.get(j).toString());
+                            }
+                        }
 
                         // Add the artist name to the list
                         topArtists.add(artistName);
@@ -150,22 +158,6 @@ public class GenerateWrapped extends Fragment {
                     newWrap.setArtists(topArtists);
 
                     JSONObject artist = items.getJSONObject(0);
-                    JSONArray genres = artist.getJSONArray("genres");
-                    ArrayList<String> topGenres = new ArrayList<>();
-                    for (int i = 0; i < genres.length(); i++) {
-                        topGenres.add(genres.get(i).toString());
-                    }
-
-                    if(topGenres.size() < 3) {
-
-                        JSONObject artist2 = items.getJSONObject(1);
-                        JSONArray genres2 = artist.getJSONArray("genres");
-
-                        for (int i = 0; i < genres.length(); i++) {
-                            if (!topGenres.contains(genres.get(i).toString()))
-                                topGenres.add(genres.get(i).toString());
-                        }
-                    }
 
                     newWrap.setGenres(topGenres);
 

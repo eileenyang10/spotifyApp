@@ -27,7 +27,7 @@ public class TopGenresFragment extends Fragment {
 
         topGenre1.setText(wrapped.getGenres().get(0));
         topGenre2.setText(wrapped.getGenres().get(1));
-//        topGenre3.setText(wrapped.getGenres().get(2));
+        topGenre3.setText(wrapped.getGenres().get(2));
 
         return view;
     }
