@@ -85,10 +85,17 @@ public class WrapperFragment extends Fragment {
     private Wrapped newWrap;
     private DatabaseReference mDatabase;
 
+    private int currentGroup = 0; // Counter for the current group
+    private Button nextButton; // Button to go to the next group
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.home_fragment, container, false);
+
+
+        nextButton = view.findViewById(R.id.nextButton); // Assuming you have a Button with id "nextButton" in your layout
+
 
         mAccessToken = ((MainActivity)getActivity()).getmAccessToken();
 
@@ -122,6 +129,62 @@ public class WrapperFragment extends Fragment {
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         mDatabase = database.getReference("wrapped");
+
+        view.findViewById(R.id.albumImage).setVisibility(View.GONE);
+        view.findViewById(R.id.textView).setVisibility(View.GONE);
+
+        view.findViewById(R.id.topSong).setVisibility(View.GONE);
+        view.findViewById(R.id.topTrackList).setVisibility(View.GONE);
+
+        view.findViewById(R.id.topArtists).setVisibility(View.GONE);
+        view.findViewById(R.id.topArtistList).setVisibility(View.GONE);
+
+        view.findViewById(R.id.topGenre).setVisibility(View.GONE);
+        view.findViewById(R.id.topGenreList).setVisibility(View.GONE);
+
+
+        nextButton.setOnClickListener(v -> {
+            currentGroup++;
+            switch (currentGroup) {
+                case 1:
+                    view.findViewById(R.id.topGenre).setVisibility(View.GONE);
+                    view.findViewById(R.id.topGenreList).setVisibility(View.GONE);
+                    view.findViewById(R.id.albumImage).setVisibility(View.VISIBLE);
+                    view.findViewById(R.id.textView).setVisibility(View.VISIBLE);
+                    System.out.println("currentGroup: " + currentGroup);
+                    break;
+                case 2:
+                    view.findViewById(R.id.albumImage).setVisibility(View.GONE);
+                    view.findViewById(R.id.textView).setVisibility(View.GONE);
+                    view.findViewById(R.id.topSong).setVisibility(View.VISIBLE);
+                    view.findViewById(R.id.topTrackList).setVisibility(View.VISIBLE);
+                    System.out.println("currentGroup: " + currentGroup);
+
+                    break;
+                case 3:
+                    view.findViewById(R.id.topSong).setVisibility(View.GONE);
+                    view.findViewById(R.id.topTrackList).setVisibility(View.GONE);
+                    view.findViewById(R.id.topArtists).setVisibility(View.VISIBLE);
+                    view.findViewById(R.id.topArtistList).setVisibility(View.VISIBLE);
+                    System.out.println("currentGroup: " + currentGroup);
+                    break;
+
+                case 4:
+                    view.findViewById(R.id.topArtists).setVisibility(View.GONE);
+                    view.findViewById(R.id.topArtistList).setVisibility(View.GONE);
+                    view.findViewById(R.id.topGenre).setVisibility(View.VISIBLE);
+                    view.findViewById(R.id.topGenreList).setVisibility(View.VISIBLE);
+                    System.out.println("currentGroup: " + currentGroup);
+                    break;
+                default:
+                    view.findViewById(R.id.topGenre).setVisibility(View.GONE);
+                    view.findViewById(R.id.topGenreList).setVisibility(View.GONE);
+
+                    currentGroup = 0;
+                    break;
+            }
+        });
+
 
         return view;
     }
