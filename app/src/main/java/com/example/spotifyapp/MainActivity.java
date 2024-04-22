@@ -111,6 +111,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public String getmAccessToken() {
+
+        if (mAccessToken == null) {
+            getToken();
+
+            if (mAccessToken != null) {
+                getCode();
+            }
+        }
         return mAccessToken;
     }
 

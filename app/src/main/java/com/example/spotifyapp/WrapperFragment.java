@@ -30,6 +30,7 @@ import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.spotifyapp.databinding.ActivityMainBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -84,39 +85,50 @@ public class WrapperFragment extends Fragment {
     private ImageView album;
     private Wrapped newWrap;
     private DatabaseReference mDatabase;
+    private ViewPager2 viewPager;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.home_fragment, container, false);
-
         mAccessToken = ((MainActivity)getActivity()).getmAccessToken();
-
         time = getArguments().getString("time");
-
         newWrap = (Wrapped) getArguments().getSerializable("loadWrap");
 
-        topArtistList = (TextView) view.findViewById(R.id.topArtistList);
-        topTrackList = (TextView) view.findViewById(R.id.topTrackList);
-        topGenreList = (TextView) view.findViewById(R.id.topGenreList);
-        album = (ImageView) view.findViewById(R.id.albumImage);
+        viewPager = (ViewPager2) view.findViewById(R.id.displayWrapCarousel);
+        viewPager.setSaveEnabled(false);
+        setupViewPager();
 
-        if (newWrap != null && newWrap.getName() != null) {
-            Log.d("wrap is not null", newWrap.toString());
-            ArrayList<String> artists = newWrap.getArtists();
-            topArtistList.setText(String.format("%s\n%s\n%s", artists.get(0), artists.get(1), artists.get(2)));
-            ArrayList<String> tracks = newWrap.getTracks();
-            topTrackList.setText(String.format("%s\n%s\n%s", tracks.get(0), tracks.get(1), tracks.get(2)));
-            ArrayList<String> genres = newWrap.getGenres();
-            topGenreList.setText(genres.get(0));
+        ((ScreenSlidePagerAdapter) viewPager.getAdapter()).setDisplayWrapped(newWrap);
+        viewPager.setCurrentItem(0);
 
-            Glide.with(getActivity()).load(newWrap.getImage()).into(album);
-        } else {
-            newWrap = new Wrapped();
-            getArtists();
-            getTracks();
-        }
+//        topArtistList = (TextView) view.findViewById(R.id.topArtistList);
+//        topTrackList = (TextView) view.findViewById(R.id.topTrackList);
+//        topGenreList = (TextView) view.findViewById(R.id.topGenreList);
+//        album = (ImageView) view.findViewById(R.id.albumImage);
 
+//        if (newWrap != null && newWrap.getName() != null) {
+//            Log.d("wrap is not null", newWrap.toString());
+////            ArrayList<String> artists = newWrap.getArtists();
+////            topArtistList.setText(String.format("%s\n%s\n%s", artists.get(0), artists.get(1), artists.get(2)));
+////            ArrayList<String> tracks = newWrap.getTracks();
+////            topTrackList.setText(String.format("%s\n%s\n%s", tracks.get(0), tracks.get(1), tracks.get(2)));
+////            ArrayList<String> genres = newWrap.getGenres();
+////            topGenreList.setText(genres.get(0));
+////
+////            Glide.with(getActivity()).load(newWrap.getImage()).into(album);
+//            ((ScreenSlidePagerAdapter) viewPager.getAdapter()).setDisplayWrapped(newWrap);
+//            viewPager.setCurrentItem(1);
+//        } else {
+////            newWrap = new Wrapped();
+//            ((ScreenSlidePagerAdapter) viewPager.getAdapter()).setDisplayWrapped(newWrap);
+//            viewPager.setCurrentItem(1);
+////            getArtists();
+////            getTracks();
+//        }
+
+//        ((ScreenSlidePagerAdapter) viewPager.getAdapter()).setDisplayWrapped(newWrap);
+//        viewPager.setCurrentItem(1);
 
         setHasOptionsMenu(true);
 
@@ -124,6 +136,16 @@ public class WrapperFragment extends Fragment {
         mDatabase = database.getReference("wrapped");
 
         return view;
+    }
+
+    private void setupViewPager() {
+        viewPager.setAdapter(new ScreenSlidePagerAdapter(getChildFragmentManager(), getLifecycle()));
+        viewPager.setPageTransformer(new ScreenSlidePagerAdapter.PageTransformer());
+
+        // default view when first open the app
+        viewPager.setCurrentItem(0);
+        // disables user input to allow cycling through the fragments
+        viewPager.setUserInputEnabled(true);
     }
 
     private String getTime() {
@@ -182,166 +204,182 @@ public class WrapperFragment extends Fragment {
         super.onDestroy();
     }
 
-    public ArrayList<String> getArtists() {
-
-        ArrayList<String> topArtists = new ArrayList<>();
-
-        if (mAccessToken == null) {
-            // If access token is null, return empty list
-            return topArtists;
-        }
-
-        // Create a request to get the user's top artists
-        final Request request = new Request.Builder()
-                .url("https://api.spotify.com/v1/me/top/artists?time_range="+time)
-                .addHeader("Authorization", "Bearer " + mAccessToken)
-                .build();
-
-        // Execute the request asynchronously
-        //cancelCall();
-        Call mCallArtist = mOkHttpClient.newCall(request);
-
-        mCallArtist.enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                Log.d("HTTP", "Failed to fetch data: " + e);
-                // Handle failure to fetch data
-                // For now, let's just print a log message
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                try {
-                    // Parse the response body as JSON
-                    JSONObject jsonObject = new JSONObject(response.body().string());
-
-                    // Get the array of items (artists)
-                    JSONArray items = jsonObject.getJSONArray("items");
-
-
-                    // Loop through each item (artist)
-                    for (int i = 0; i < items.length(); i++) {
-                        // Get the artist object
-                        JSONObject artist = items.getJSONObject(i);
-
-                        // Get the name of the artist
-                        String artistName = artist.getString("name");
-
-                        // Add the artist name to the list
-                        topArtists.add(artistName);
-                    }
-
-                    // Now, you can use the topArtists list as needed
-                    // For now, let's just log the list
-                    Log.d("Top Artists", topArtists.toString());
-                    String top = topArtists.get(0) + "\n" + topArtists.get(1) + "\n" + topArtists.get(2);
-                    setTextAsync(top, topArtistList);
-
-                    newWrap.setArtists(topArtists);
-
-                    JSONObject artist = items.getJSONObject(0);
-                    JSONArray genres = artist.getJSONArray("genres");
-                    ArrayList<String> topGenres = new ArrayList<>();
-                    for (int i = 0; i < genres.length(); i++) {
-                        topGenres.add(genres.get(i).toString());
-                    }
-
-                    newWrap.setGenres(topGenres);
-
-                    setTextAsync(genres.get(0).toString(), topGenreList);
-
-                    JSONArray images = artist.getJSONArray("images");
-                    String imageUrl = images.getJSONObject(0).getString("url");
-                    newWrap.setImage(imageUrl);
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Glide.with(getActivity())
-                                    .load(imageUrl)
-                                    .into(album);                                    }
-                    });
-                } catch (JSONException e) {
-                    Log.d("JSON", "Failed to parse data: " + e);
-                    // Handle failure to parse data
-                    // For now, let's just print a log message
-                }
-            }
-        });
-
-        // Return the list of top artists (this will likely be empty initially)
-        System.out.println("artists: " + topArtists);
-
-        return topArtists;
-    }
-
-
-    public ArrayList<String> getTracks() {
-        ArrayList<String> topTracks = new ArrayList<>();
-
-        if (mAccessToken == null) {
-            // If access token is null, return empty list
-            return topTracks;
-        }
-
-        // Create a request to get the user's top tracks
-        final Request request = new Request.Builder()
-                .url("https://api.spotify.com/v1/me/top/tracks?time_range="+time)
-                .addHeader("Authorization", "Bearer " + mAccessToken)
-                .build();
-
-        // Execute the request asynchronously
-        //cancelCall();
-        Call mCallTrack = mOkHttpClient.newCall(request);
-
-        mCallTrack.enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                Log.d("HTTP", "Failed to fetch data: " + e);
-                // Handle failure to fetch data
-                // For now, let's just print a log message
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                try {
-                    // Parse the response body as JSON
-                    JSONObject jsonObject = new JSONObject(response.body().string());
-
-                    // Get the array of items (tracks)
-                    JSONArray items = jsonObject.getJSONArray("items");
-
-                    // Loop through each item (track)
-                    for (int i = 0; i < items.length(); i++) {
-                        // Get the track object
-                        JSONObject track = items.getJSONObject(i);
-
-                        // Get the name of the track
-                        String trackName = track.getString("name");
-
-                        // Add the track name to the list
-                        topTracks.add(trackName);
-                    }
-
-                    newWrap.setTracks(topTracks);
-
-                    // Now, you can use the topTracks list as needed
-                    // For now, let's just log the list
-                    Log.d("Top Tracks", topTracks.toString());
-                    String top = topTracks.get(0) + "\n" + topTracks.get(1) + "\n" + topTracks.get(2);
-                    setTextAsync(top, topTrackList);
-
-                } catch (JSONException e) {
-                    Log.d("JSON", "Failed to parse data: " + e);
-                    // Handle failure to parse data
-                    // For now, let's just print a log message
-                }
-            }
-        });
-
-        // Return the list of top tracks (this will likely be empty initially)
-        System.out.println(topTracks);
-        return topTracks;
-    }
+//    public ArrayList<String> getArtists() {
+//
+//        ArrayList<String> topArtists = new ArrayList<>();
+//
+//        if (mAccessToken == null) {
+//            // If access token is null, return empty list
+//            return topArtists;
+//        }
+//
+//        // Create a request to get the user's top artists
+//        final Request request = new Request.Builder()
+//                .url("https://api.spotify.com/v1/me/top/artists?time_range="+time)
+//                .addHeader("Authorization", "Bearer " + mAccessToken)
+//                .build();
+//
+//        // Execute the request asynchronously
+//        //cancelCall();
+//        Call mCallArtist =mOkHttpClient .newCall(request);
+//
+//        mCallArtist.enqueue(new Callback() {
+//            @Override
+//            public void onFailure(Call call, IOException e) {
+//                Log.d("HTTP", "Failed to fetch data: " + e);
+//                // Handle failure to fetch data
+//                // For now, let's just print a log message
+//            }
+//
+//            @Override
+//            public void onResponse(Call call, Response response) throws IOException {
+//                try {
+//                    // Parse the response body as JSON
+//                    JSONObject jsonObject = new JSONObject(response.body().string());
+//
+//                    // Get the array of items (artists)
+//                    JSONArray items = jsonObject.getJSONArray("items");
+//
+//
+//                    // Loop through each item (artist)
+//                    for (int i = 0; i < items.length(); i++) {
+//                        // Get the artist object
+//                        JSONObject artist = items.getJSONObject(i);
+//
+//                        // Get the name of the artist
+//                        String artistName = artist.getString("name");
+//
+//                        // Add the artist name to the list
+//                        topArtists.add(artistName);
+//                    }
+//
+//                    // Now, you can use the topArtists list as needed
+//                    // For now, let's just log the list
+//                    Log.d("Top Artists", topArtists.toString());
+//                    String top = topArtists.get(0) + "\n" + topArtists.get(1) + "\n" + topArtists.get(2);
+//                    setTextAsync(top, topArtistList);
+//
+//                    newWrap.setArtists(topArtists);
+//
+//                    JSONObject artist = items.getJSONObject(0);
+//                    JSONArray genres = artist.getJSONArray("genres");
+//                    ArrayList<String> topGenres = new ArrayList<>();
+//                    for (int i = 0; i < genres.length(); i++) {
+//                        topGenres.add(genres.get(i).toString());
+//                    }
+//
+//                    if(topGenres.size() < 3) {
+//
+//                        JSONObject artist2 = items.getJSONObject(1);
+//                        JSONArray genres2 = artist.getJSONArray("genres");
+//
+//                        for (int i = 0; i < genres.length(); i++) {
+//                            if (!topGenres.contains(genres.get(i).toString()))
+//                                topGenres.add(genres.get(i).toString());
+//                        }
+//                    }
+//
+//                    newWrap.setGenres(topGenres);
+//
+//                    setTextAsync(genres.get(0).toString(), topGenreList);
+//
+//                    JSONArray images = artist.getJSONArray("images");
+//                    String imageUrl = images.getJSONObject(0).getString("url");
+//                    newWrap.setImage(imageUrl);
+//                    getActivity().runOnUiThread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            Glide.with(getActivity())
+//                                    .load(imageUrl)
+//                                    .into(album);                                    }
+//                    });
+//                } catch (JSONException e) {
+//                    Log.d("JSON", "Failed to parse data: " + e);
+//                    // Handle failure to parse data
+//                    // For now, let's just print a log message
+//                }
+//            }
+//        });
+//
+//        // Return the list of top artists (this will likely be empty initially)
+//        System.out.println("artists: " + topArtists);
+//
+//        return topArtists;
+//    }
+//
+//
+//    public ArrayList<String> getTracks() {
+//        ArrayList<String> topTracks = new ArrayList<>();
+//
+//        if (mAccessToken == null) {
+//            // If access token is null, return empty list
+//            return topTracks;
+//        }
+//
+//        // Create a request to get the user's top tracks
+//        final Request request = new Request.Builder()
+//                .url("https://api.spotify.com/v1/me/top/tracks?time_range="+time)
+//                .addHeader("Authorization", "Bearer " + mAccessToken)
+//                .build();
+//
+//        // Execute the request asynchronously
+//        //cancelCall();
+//        Call mCallTrack = mOkHttpClient.newCall(request);
+//
+//        mCallTrack.enqueue(new Callback() {
+//            @Override
+//            public void onFailure(Call call, IOException e) {
+//                Log.d("HTTP", "Failed to fetch data: " + e);
+//                // Handle failure to fetch data
+//                // For now, let's just print a log message
+//            }
+//
+//            @Override
+//            public void onResponse(Call call, Response response) throws IOException {
+//                try {
+//                    // Parse the response body as JSON
+//                    JSONObject jsonObject = new JSONObject(response.body().string());
+//
+//                    // Get the array of items (tracks)
+//                    JSONArray items = jsonObject.getJSONArray("items");
+//
+//                    ArrayList<String> topTrackImages = new ArrayList<>();
+//
+//                    // Loop through each item (track)
+//                    for (int i = 0; i < items.length(); i++) {
+//                        // Get the track object
+//                        JSONObject track = items.getJSONObject(i);
+//
+//                        // Get the name of the track
+//                        String trackName = track.getString("name");
+//                        String imageUrl = track.getJSONArray("images").getJSONObject(0).getString("url");
+//
+//                        // Add the track name to the list
+//                        topTracks.add(trackName);
+//                        topTrackImages.add(imageUrl);
+//                    }
+//
+//                    newWrap.setTracks(topTracks);
+//                    newWrap.setTrackImages(topTrackImages);
+//
+//                    // Now, you can use the topTracks list as needed
+//                    // For now, let's just log the list
+//                    Log.d("Top Tracks", topTracks.toString());
+//                    String top = topTracks.get(0) + "\n" + topTracks.get(1) + "\n" + topTracks.get(2);
+//                    setTextAsync(top, topTrackList);
+//
+//                } catch (JSONException e) {
+//                    Log.d("JSON", "Failed to parse data: " + e);
+//                    // Handle failure to parse data
+//                    // For now, let's just print a log message
+//                }
+//            }
+//        });
+//
+//        // Return the list of top tracks (this will likely be empty initially)
+//        System.out.println(topTracks);
+//        return topTracks;
+//    }
 
 
 }

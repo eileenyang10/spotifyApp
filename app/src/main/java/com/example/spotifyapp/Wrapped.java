@@ -10,6 +10,7 @@ public class Wrapped implements Serializable {
     private ArrayList<String> genres;
     private String image;
     private String name;
+    private ArrayList<String> trackImages;
 
     public Wrapped() {
         artists = new ArrayList<String>();
@@ -71,5 +72,13 @@ public class Wrapped implements Serializable {
 
     public String toString() {
         return name;
+    }
+
+    public ArrayList<String> getTrackImages() {
+        return trackImages;
+    }
+
+    public void setTrackImages(ArrayList<String> trackImages) {
+        this.trackImages = trackImages;
     }
 }
