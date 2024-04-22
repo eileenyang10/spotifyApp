@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -33,6 +35,7 @@ import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import android.view.Gravity;
 
 public class GameFragment extends Fragment {
 
@@ -190,10 +193,10 @@ public class GameFragment extends Fragment {
                                 option4Button.setText(finalIncorrectAnswers.get(3));
 
                                 // Set click listeners for the buttons
-                                option1Button.setOnClickListener(v -> checkAnswer(finalIncorrectAnswers.get(0)));
-                                option2Button.setOnClickListener(v -> checkAnswer(finalIncorrectAnswers.get(1)));
-                                option3Button.setOnClickListener(v -> checkAnswer(finalIncorrectAnswers.get(2)));
-                                option4Button.setOnClickListener(v -> checkAnswer(finalIncorrectAnswers.get(3)));
+                                option1Button.setOnClickListener(v -> checkAnswer(finalIncorrectAnswers.get(0), option1Button));
+                                option2Button.setOnClickListener(v -> checkAnswer(finalIncorrectAnswers.get(1), option2Button));
+                                option3Button.setOnClickListener(v -> checkAnswer(finalIncorrectAnswers.get(2), option3Button));
+                                option4Button.setOnClickListener(v -> checkAnswer(finalIncorrectAnswers.get(3), option4Button));
                             }
                         }
                     });
@@ -205,16 +208,40 @@ public class GameFragment extends Fragment {
         });
     }
 
-    private void checkAnswer(String selectedAnswer) {
+    private void checkAnswer(String selectedAnswer, Button selectedButton) {
         if (selectedAnswer.equals(correctAnswer)) {
             // Correct answer
-            Toast.makeText(getActivity(), "Correct!", Toast.LENGTH_SHORT).show();
+            Animation correctAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.correct_answer);
+            selectedButton.startAnimation(correctAnimation);
+            // Toast animation
+            LayoutInflater inflater = getLayoutInflater();
+            View layout = inflater.inflate(R.layout.toast_correct, (ViewGroup) getView().findViewById(R.id.toast_root));
+            Toast toast = new Toast(getActivity());
+            toast.setGravity(Gravity.CENTER, 0, 0);
+            toast.setDuration(Toast.LENGTH_SHORT);
+            toast.setView(layout);
+            // Load the fade-out animation
+            Animation fadeOut = AnimationUtils.loadAnimation(getActivity(), R.anim.toast_fade);
+
+            // Apply the animation to the Toast
+            layout.startAnimation(fadeOut);
+            toast.show();
+
             score++;
             fetchAndDisplaySong();
 
         } else {
             // Incorrect answer
-            Toast.makeText(getActivity(), "Incorrect. Try again!", Toast.LENGTH_SHORT).show();
+            Animation shakeAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.shake);
+            selectedButton.startAnimation(shakeAnimation);
+
+            LayoutInflater inflater = getLayoutInflater();
+            View layout = inflater.inflate(R.layout.toast_wrong, (ViewGroup) getView().findViewById(R.id.toast_root));
+            Toast toast = new Toast(getActivity());
+            toast.setGravity(Gravity.CENTER, 0, 0);
+            toast.setDuration(Toast.LENGTH_SHORT);
+            toast.setView(layout);
+            toast.show();
             score = 0;
         }
         scoreTextView.setText("Score: " + String.valueOf(score));
